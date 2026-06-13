@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helper Functions ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(authorId) {
+      return isSignedIn() && request.auth.uid == authorId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Entity Validations ---
+    function isValidPrompt(data) {
+      return data.keys().hasAll(['title', 'category', 'content', 'model', 'updatedAt', 'authorId'])
+        && data.keys().size() == 6
+        && data.title is string && data.title.size() <= 200
+        && data.category in ['Tooling', 'Data Analysis', 'Creative', 'Automation', 'DevOps']
+        && data.content is string && data.content.size() <= 10000
+        && data.model is string && data.model.size() <= 100
+        && data.updatedAt is timestamp
+        && data.authorId == request.auth.uid;
+    }
+
+    // --- Collection Rules ---
+    match /prompts/{promptId} {
+      allow read: if isSignedIn(); // Social library: everyone can read
+      
+      allow create: if isSignedIn() 
+                    && isValidId(promptId) 
+                    && isValidPrompt(incoming());
+      
+      allow update: if isSignedIn() 
+                    && isOwner(existing().authorId)
+                    && isValidPrompt(incoming())
+                    && incoming().authorId == existing().authorId // Immutable author
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'category', 'content', 'model', 'updatedAt']);
+      
+      allow delete: if isSignedIn() && isOwner(existing().authorId);
+    }
+  }
+}

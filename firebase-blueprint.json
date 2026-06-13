@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "Prompt": {
+      "title": "Prompt",
+      "description": "A saved AI prompt with metadata",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the prompt"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Tooling", "Data Analysis", "Creative", "Automation", "DevOps"],
+          "description": "The category classification"
+        },
+        "content": {
+          "type": "string",
+          "description": "The actual prompt text"
+        },
+        "model": {
+          "type": "string",
+          "description": "The AI model this prompt is optimized for"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last updated timestamp"
+        },
+        "authorId": {
+          "type": "string",
+          "description": "The UID of the user who created the prompt"
+        }
+      },
+      "required": ["title", "category", "content", "model", "updatedAt", "authorId"]
+    }
+  },
+  "firestore": {
+    "/prompts/{promptId}": {
+      "schema": "Prompt",
+      "description": "Global library of prompts"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Synthetic Intelligence Repository",
+  "description": "A high-performance prompt library for cognitive workflows, featuring a minimalist developer-centric design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap');
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-bg: #070b10;
+  --color-surface: #0d1117;
+  --color-card: #151a24;
+  --color-electric-blue: #3b82f6;
+  --color-soft-orchid: #a855f7;
+  
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-gray-200 font-sans;
+    background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                      url("https://www.transparenttextures.com/patterns/dark-matter.png");
+  }
+}
+
+.glow-btn {
+  @apply relative overflow-hidden transition-all duration-300;
+  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+}
+
+.glow-btn:hover {
+  box-shadow: 0 0 15px 0 rgba(59, 130, 246, 0.3);
+}
+
+.orchid-glow {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.blue-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+@keyframes pulse-blue {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.pulse-dot {
+  animation: pulse-blue 2s infinite ease-in-out;
+}
